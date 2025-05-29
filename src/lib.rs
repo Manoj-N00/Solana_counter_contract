@@ -13,6 +13,11 @@ enum InstructionType {
     Decrement(u32),
 }
 
+#[derive(BorshSerialize, BorshDeserialize)] 
+struct Counter {
+    count: u32
+}
+
 entrypoint!(counter_contract);
 
 pub fn counter_contract(
@@ -26,7 +31,15 @@ pub fn counter_contract(
     let instruction_type= InstructionType::try_from_slice(instruction_data)?;
 
     match instruction_type {
-        
+        InstructionType::Increment(value) => {
+            let mut counter_data = Counter::try_from_slice(&acc.data.borrow())?;
+            counter_data.count += value;
+        },
+        InstructionType::Decrement(value) => {
+            let mut counter_data = Counter::try_from_slice(&acc.data.borrow())?;
+            counter_data.count -= value;
+        }
     }
+    Ok(())
    
 }
