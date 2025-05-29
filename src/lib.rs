@@ -7,6 +7,7 @@ use solana_program::{
     
 };
 
+#[derive(BorshSerialize, BorshDeserialize)]
 enum InstructionType {
     Increment(u32),
     Decrement(u32),
@@ -20,5 +21,12 @@ pub fn counter_contract(
  instruction_data:&[u8],
 
 ) -> ProgramResult {
-   let acc = next_account_info(&mut accounts.iter())?;
+
+    let acc = next_account_info(&mut accounts.iter())?;
+    let instruction_type= InstructionType::try_from_slice(instruction_data)?;
+
+    match instruction_type {
+        
+    }
+   
 }
