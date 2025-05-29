@@ -29,17 +29,20 @@ pub fn counter_contract(
 
     let acc = next_account_info(&mut accounts.iter())?;
     let instruction_type= InstructionType::try_from_slice(instruction_data)?;
+     let mut counter_data = Counter::try_from_slice(&acc.data.borrow())?;
 
     match instruction_type {
         InstructionType::Increment(value) => {
-            let mut counter_data = Counter::try_from_slice(&acc.data.borrow())?;
+            msg!("Increment");
             counter_data.count += value;
         },
         InstructionType::Decrement(value) => {
-            let mut counter_data = Counter::try_from_slice(&acc.data.borrow())?;
+            msg!("Decrement");
             counter_data.count -= value;
         }
     }
+    counter_data.serialize(&mut *acc.data.borrow_mut());
+    msg!("contract successfully executed");
     Ok(())
    
 }
